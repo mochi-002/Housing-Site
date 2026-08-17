@@ -121,36 +121,63 @@ const remove = asyncHandler(async (req: AuthRequest, res: Response) => {
 })
 
 /**
- * @description View all interest requests sent to one of your listings
+ * @description View all interest requests sent to a lister's apartment
  * @route /listings/:id/requests
  * @method GET
- * @access private (Lister only, owner only)
+ * @access private (lister only)
  */
-const getRequests = asyncHandler(async (req: AuthRequest, res: Response) => {})
+const getListerRequests = asyncHandler(
+  async (req: AuthRequest, res: Response) => {
+    const listingId = Array.isArray(req.params.id)
+      ? req.params.id[0]
+      : req.params.id
 
-/**
- * @description Accept an interest request — listing owner only
- * @route /requests/:id/accept
- * @method PATCH
- * @access private (Lister only)
- */
+    if (!listingId) {
+      res.status(400).json({
+        message: 'Listing id is required',
+      })
+      return
+    }
 
-const accept = asyncHandler(async (req: Request, res: Response) => {})
+    // 1. check apartment first
+    const listing = await Listing.findById(listingId)
 
-/**
- * @description Decline an interest request — listing owner only
- * @route /requests/:id/decline
- * @method PATCH
- * @access private (Lister only)
- */
+    if (!listing) {
+      res.status(404).json({
+        message: 'Apartment not found',
+      })
+      return
+    }
 
-const decline = asyncHandler(async (req: Request, res: Response) => {})
+    // 2. Make sure the logged-in lister owns this apartment
+    if (!listing.owner.equals(req.user!._id)) {
+      res.status(403).json({
+        message: 'You can only view requests for your own apartment',
+      })
+      return
+    }
+
+    const requests = await InterestRequest.find({
+      listing: listingId,
+    })
+      .populate('seeker', 'fullName email -_id')
+      .select('listing seeker -_id')
+      .select('-__v')
+
+    if (requests.length === 0) {
+      res.status(404).json({
+        message: 'No interest requests found',
+      })
+      return
+    }
+
+    res.status(200).json(requests)
+  },
+)
 
 export {
   create as createApartment,
   update as updateApartment,
   remove as deleteApartment,
-  getRequests,
-  accept as acceptRequest,
-  decline as declineRequest,
+  getListerRequests,
 }

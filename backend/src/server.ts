@@ -12,7 +12,8 @@ import {
 } from './middlewares/ErrorHandlers.middleware.js'
 import { listingsRouter } from './routers/Lister.router.js'
 import { authRouter } from './routers/Auth.router.js'
-import { ApartmentRouter } from './routers/Apartment.router.js'
+import { ApartmentRouter } from './routers/User.router.js'
+import { requestsRouter } from './routers/Requests.rotuer.js'
 // DB
 connectToDB()
 
@@ -25,7 +26,9 @@ app.use(requestsLogger)
 
 // Routes
 app.use('/auth', authRouter)
-app.use('/listings', ApartmentRouter, listingsRouter)
+app.use('/listings', ApartmentRouter) // public GET + POST /:id/requests
+app.use('/listings', listingsRouter) // Lister CRUD (create/update/delete)
+app.use('/requests', requestsRouter) // accept/declinerequests - Listers get/delteRequests - Users
 
 // Errors
 app.use(notFound)

@@ -1,11 +1,9 @@
 import express, { Router } from 'express'
 import asyncHandler from 'express-async-handler'
 import {
-  acceptRequest,
   createApartment,
-  declineRequest,
   deleteApartment,
-  getRequests,
+  getListerRequests,
   updateApartment,
 } from '../controllers/Lister.controller.js'
 import { requireLister } from '../middlewares/Role.middleware.js'
@@ -20,10 +18,6 @@ router
   .patch(verifyToken, requireLister, updateApartment)
   .delete(verifyToken, requireLister, deleteApartment)
 
-router.route('/:id/requests').get(getRequests)
-
-router.route('/:id/accept').patch(acceptRequest)
-
-router.route('/:id/decline').patch(declineRequest)
+router.route('/:id/requests').get(verifyToken, requireLister, getListerRequests)
 
 export { router as listingsRouter }

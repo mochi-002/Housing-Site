@@ -1,4 +1,3 @@
-import Joi from 'joi'
 import mongoose from 'mongoose'
 
 const InterestRequestSchema = new mongoose.Schema({

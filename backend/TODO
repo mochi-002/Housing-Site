@@ -28,18 +28,18 @@ Phase 3 - Listings CRUD (Lister):
   ✔ PUT /listings/:id - update own listing only @done(26-08-16)
   ✔ DELETE /listings/:id - delete own listing only @done(26-08-16)
     ✔ Block deletion if listing has any accepted interest requests @done(26-08-16)
-  ☐ Enforce "cannot manage other listers' listings" check
+  ✔ Enforce "cannot manage other listers' listings" check @done(26-08-17)
 
 Phase 4 - Interest Requests:
-  ☐ POST /listings/:id/requests - Seeker sends interest request
-    ☐ Block duplicate requests (same seeker + same listing)
-    ☐ Block listers from requesting their own listing
-  ☐ GET /requests/mine - Seeker views own request history
-  ☐ DELETE /requests/:id - Seeker cancels own pending request
-  ☐ GET /listings/:id/requests - Lister views requests on their listing
-  ☐ PATCH /requests/:id/accept - Lister accepts (owner-only check)
-  ☐ PATCH /requests/:id/decline - Lister declines (owner-only check)
-  ☐ Confirm accepting one request does NOT auto-decline others
+  ✔ POST /listings/:id/requests - Seeker sends interest request @done(26-08-17)
+    ✔ Block duplicate requests (same seeker + same listing) @done(26-08-17)
+    ✔ Block listers from requesting their own listing @done(26-08-17)
+  ✔ GET /requests/mine - Seeker views own request history @done(26-08-17)
+  ✔ DELETE /requests/:id - Seeker cancels own pending request @done(26-08-17)
+  ✔ GET /listings/:id/requests - Lister views requests on their listing @done(26-08-17)
+  ✔ PATCH /requests/:id/accept - Lister accepts (owner-only check) @done(26-08-17)
+  ✔ PATCH /requests/:id/decline - Lister declines (owner-only check) @done(26-08-17)
+  ✔ Confirm accepting one request does NOT auto-decline others @done(26-08-17)
 
 Phase 5 - Search & Filtering:
   ✔ Filter listings by location @done(26-08-16)
