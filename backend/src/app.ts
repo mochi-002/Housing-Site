@@ -26,6 +26,9 @@ app.use(requestsLogger)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 // Routes
+app.get('/', (req, res) => {
+  res.status(200).send('Backend API is up and running!')
+})
 app.use('/auth', authRouter)
 app.use('/listings', ApartmentRouter) // public GET + POST /:id/requests
 app.use('/listings', listingsRouter) // Lister CRUD (create/update/delete)
