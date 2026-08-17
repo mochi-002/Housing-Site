@@ -1,11 +1,7 @@
 // imports
-import express, { type Application } from 'express'
+import express from 'express'
 import 'dotenv/config'
-import { connectToDB } from './config/db.config.js'
-import {
-  requestsLogger,
-  serverLogger,
-} from './middlewares/Logger.middleware.js'
+import { requestsLogger } from './middlewares/Logger.middleware.js'
 import {
   errorHandler,
   notFound,
@@ -16,10 +12,13 @@ import { ApartmentRouter } from './routers/User.router.js'
 import { requestsRouter } from './routers/Requests.rotuer.js'
 import swaggerUi from 'swagger-ui-express'
 import { swaggerSpec } from './config/swagger.config.js'
-import { startServer } from './utils/server.utils.js'
+import { connectToDB } from './config/db.config.js'
 
 // APP
 const app: express.Application = express()
+
+// connect to database
+connectToDB()
 
 // Middlewares
 app.use(express.json())
