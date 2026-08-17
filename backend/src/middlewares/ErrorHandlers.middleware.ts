@@ -6,10 +6,10 @@ export const notFound = (
   res: express.Response,
   next: express.NextFunction,
 ) => {
-  const error = new Error(`Not Found - ${req.originalUrl}`)
-  res.status(404)
-
-  next(error)
+  res.status(404).json({
+    success: false,
+    message: `Route not found: ${req.originalUrl}`,
+  })
 }
 
 export const errorHandler = (
@@ -18,8 +18,10 @@ export const errorHandler = (
   res: express.Response,
   next: express.NextFunction,
 ) => {
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode
-  res.status(statusCode).json({ message: err.message })
+  res.status(500).json({
+    success: false,
+    message: 'Something went wrong, please try again later',
+  })
 }
 
 export const validateId = (id: string, res: express.Response): boolean => {

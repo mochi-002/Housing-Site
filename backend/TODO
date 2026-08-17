@@ -52,15 +52,15 @@ Phase 6 - Validation & Middleware:
   ✔ Input validation middleware (email format, password strength, required fields, positive price) @done(26-08-16)
   ✔ Logger middleware (request method/path/timestamp) @done(26-08-16)
   ✔ Centralized error-handling middleware @done(26-08-16)
-  ☐ Consistent API response format
+  ✔ Consistent API response format @done(26-08-17)
 
 Phase 7 - Documentation:
-  ☐ Install & configure Swagger (swagger-jsdoc / swagger-ui-express)
-  ☐ Document all endpoints (auth, listings, requests) with request/response schemas
-  ☐ Add auth (Bearer JWT) to Swagger config for protected routes
+  ✔ Install & configure Swagger (swagger-jsdoc / swagger-ui-express) @done(26-08-17)
+  ✔ Document all endpoints (auth, listings, requests) with request/response schemas @done(26-08-17)
+  ✔ Add auth (Bearer JWT) to Swagger config for protected routes @done(26-08-17)
 
 Phase 8 - Deployment:
-  ☐ Prepare production build script (tsc build step)
+  ✔ Prepare production build script (tsc build step) @done(26-08-17)
   ☐ Set environment variables on host (Render/Railway)
   ☐ Deploy MongoDB (Atlas) and connect
   ☐ Deploy app to Render or Railway
@@ -80,4 +80,4 @@ Bonus (Optional):
   ☐ Basic messaging between lister and seeker
   ☐ Sorting by price / newest
   ☐ Dashboard statistics (e.g. total listings, requests per status)
-  ☐ Logging middleware to file (if not already done in Phase 6)
+  ✔ Logging middleware to file (if not already done in Phase 6) @done(26-08-17)

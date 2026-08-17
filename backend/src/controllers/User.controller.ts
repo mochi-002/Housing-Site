@@ -4,6 +4,7 @@ import { validateListingQuery } from '../validators/Listing.validate.js'
 import type { Request, Response } from 'express'
 import type { AuthRequest } from '../middlewares/Auth.middleware.js'
 import { InterestRequest } from '../models/InterestRequest.model.js'
+import { sendError, sendSuccess } from '../utils/response.util.js'
 
 /**
  * @description Get all Apartments (with optional search/filter)
@@ -16,10 +17,9 @@ const getAll = asyncHandler(async (req: Request, res: Response) => {
   const { error, value } = validateListingQuery(req.query)
 
   if (error) {
-    const detail = error.details?.[0]
-
-    res.status(400).json({
-      message: detail?.message ?? 'Invalid query parameters',
+    sendError(res, {
+      message: error.details?.[0]?.message ?? 'Invalid query parameters',
+      statusCode: 400,
     })
     return
   }
@@ -43,7 +43,15 @@ const getAll = asyncHandler(async (req: Request, res: Response) => {
     'owner',
     'fullName email -_id',
   )
-  res.status(200).json(apartments)
+
+  sendSuccess(res, {
+    message:
+      apartments.length === 0
+        ? 'No apartments found'
+        : 'Apartments fetched successfully',
+    data: { apartments },
+    statusCode: 200,
+  })
 })
 
 /**
@@ -59,17 +67,19 @@ const get = asyncHandler(async (req: Request, res: Response) => {
   )
 
   if (!apartment) {
-    res.status(404).json({
-      message: `Apartment not found`,
-    })
+    sendError(res, { message: 'Apartment not found', statusCode: 404 })
     return
   }
 
-  res.status(200).json(apartment)
+  sendSuccess(res, {
+    message: 'Apartment fetched successfully',
+    data: { apartment },
+    statusCode: 200,
+  })
 })
 
 /**
- * @description View all interest requests sent
+ * @description View all interest requests sent by the logged-in seeker
  * @route /listings/:id/requests
  * @method GET
  * @access private
@@ -85,14 +95,14 @@ const getRequests = asyncHandler(async (req: AuthRequest, res: Response) => {
     .populate('seeker', 'fullName email')
     .select('-__v')
 
-  if (requests.length === 0) {
-    res.status(404).json({
-      message: 'No available requests',
-    })
-    return
-  }
-
-  res.status(200).json(requests)
+  sendSuccess(res, {
+    message:
+      requests.length === 0
+        ? 'No requests found'
+        : 'Requests fetched successfully',
+    data: { requests },
+    statusCode: 200,
+  })
 })
 
 export { getAll as getAllApartments, get as getApartment, getRequests }

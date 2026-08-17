@@ -69,7 +69,7 @@ export function requestsLogger(
 export function serverLogger(PORT: number) {
   logger.separator()
   logger.separator()
-  logger.info('Server is running')
+  logger.success('Server is running')
   logger.info(`Port: ${PORT}`)
   logger.info(`URL: http://localhost:${PORT}`)
   logger.separator()

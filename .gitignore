@@ -1,0 +1,9 @@
+.prettierrc
+requirements.md
+
+backend/dist
+backend/node_modules
+backend/.env
+backend/package-lock.json
+backend/req.md
+backend/TODO

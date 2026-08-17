@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import { User } from '../models/User.model.js'
 import { validateLogin, validateRegister } from '../validators/User.validate.js'
 import type { Request, Response } from 'express'
+import { sendError, sendSuccess } from '../utils/response.util.js'
 
 /**
  * @description Register New User
@@ -15,10 +16,9 @@ const register = asyncHandler(async (req: Request, res: Response) => {
   const { error } = validateRegister(req.body)
 
   if (error) {
-    const detail = error.details?.[0]
-
-    res.status(400).json({
-      message: detail?.message ?? 'Validation failed',
+    sendError(res, {
+      message: error.details?.[0]?.message ?? 'Validation Failed',
+      statusCode: 400,
     })
     return
   }
@@ -30,8 +30,8 @@ const register = asyncHandler(async (req: Request, res: Response) => {
   const existingUser = await User.findOne({ email })
 
   if (existingUser) {
-    res.status(400).json({
-      message: 'This user is already registered',
+    sendError(res, {
+      message: 'User already registered',
     })
     return
   }
@@ -58,10 +58,10 @@ const register = asyncHandler(async (req: Request, res: Response) => {
   const { password: _password, ...other } = userObject
 
   // 9. Send response
-  res.status(201).json({
+  sendSuccess(res, {
     message: 'User registered successfully',
-    user: other,
-    token,
+    data: { user: other, token },
+    statusCode: 201,
   })
 })
 
@@ -76,10 +76,9 @@ const login = asyncHandler(async (req: Request, res: Response) => {
   const { error } = validateLogin(req.body)
 
   if (error) {
-    const detail = error.details?.[0]
-
-    res.status(400).json({
-      message: detail?.message ?? 'Validation failed',
+    sendError(res, {
+      message: error.details?.[0]?.message ?? 'Validation Failed',
+      statusCode: 400,
     })
     return
   }
@@ -90,7 +89,7 @@ const login = asyncHandler(async (req: Request, res: Response) => {
   const existingUser = await User.findOne({ email })
 
   if (!existingUser) {
-    res.status(400).json({
+    sendError(res, {
       message: 'User not found, Invalid email or password',
     })
     return
@@ -99,7 +98,9 @@ const login = asyncHandler(async (req: Request, res: Response) => {
   // 3. Verify plain text password against stored hashed password
   const isPasswordMatch = await bcrypt.compare(password, existingUser.password)
   if (!isPasswordMatch) {
-    res.status(400).json({ message: 'Invalid email or password' })
+    sendError(res, {
+      message: 'Invalid email or password',
+    })
     return
   }
 
@@ -110,10 +111,10 @@ const login = asyncHandler(async (req: Request, res: Response) => {
   const { password: _password, ...other } = userObject
 
   // 5. Send 200 OK response containing sanitized user details
-  res.status(200).json({
+  sendSuccess(res, {
     message: 'User logged in successfully',
-    user: other,
-    token,
+    data: { user: other, token },
+    statusCode: 200,
   })
 })
 

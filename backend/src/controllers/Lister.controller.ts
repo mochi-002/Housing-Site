@@ -8,6 +8,7 @@ import {
 } from '../validators/Listing.validate.js'
 import type { Request, Response } from 'express'
 import type { AuthRequest } from '../middlewares/Auth.middleware.js'
+import { sendSuccess, sendError } from '../utils/response.util.js'
 
 /**
  * @description Create new Apartment
@@ -18,8 +19,9 @@ import type { AuthRequest } from '../middlewares/Auth.middleware.js'
 const create = asyncHandler(async (req: AuthRequest, res: Response) => {
   const { error, value } = validateCreateListing(req.body)
   if (error) {
-    res.status(400).json({
-      message: error.details[0]?.message,
+    sendError(res, {
+      message: error.details[0]?.message ?? 'Validation failed',
+      statusCode: 400,
     })
     return
   }
@@ -29,9 +31,10 @@ const create = asyncHandler(async (req: AuthRequest, res: Response) => {
     owner: req.user!._id,
   })
 
-  res.status(201).json({
-    message: `Apartment created Successfully`,
-    apartment,
+  sendSuccess(res, {
+    message: 'Apartment created successfully',
+    data: { apartment },
+    statusCode: 201,
   })
 })
 
@@ -45,23 +48,23 @@ const update = asyncHandler(async (req: AuthRequest, res: Response) => {
   const apartment = await Listing.findById(req.params.id)
 
   if (!apartment) {
-    res.status(404).json({
-      message: 'Apartment not found',
-    })
+    sendError(res, { message: 'Apartment not found', statusCode: 404 })
     return
   }
 
   if (!apartment.owner.equals(req.user!._id)) {
-    res.status(403).json({
+    sendError(res, {
       message: 'You can only edit your own listings',
+      statusCode: 403,
     })
     return
   }
 
   const { error, value } = validateUpdateListing(req.body)
   if (error) {
-    res.status(400).json({
-      message: error.details[0]?.message,
+    sendError(res, {
+      message: error.details[0]?.message ?? 'Validation failed',
+      statusCode: 400,
     })
     return
   }
@@ -75,7 +78,12 @@ const update = asyncHandler(async (req: AuthRequest, res: Response) => {
   if (status !== undefined) apartment.status = status
 
   await apartment.save()
-  res.status(200).json({ message: 'Apartment updated', apartment })
+
+  sendSuccess(res, {
+    message: 'Apartment updated successfully',
+    data: { apartment },
+    statusCode: 200,
+  })
 })
 
 /**
@@ -88,35 +96,36 @@ const remove = asyncHandler(async (req: AuthRequest, res: Response) => {
   const apartment = await Listing.findById(req.params.id)
 
   if (!apartment) {
-    res.status(404).json({
-      message: 'Apartment not found',
-    })
+    sendError(res, { message: 'Apartment not found', statusCode: 404 })
     return
   }
 
   if (!apartment.owner.equals(req.user!._id)) {
-    res.status(403).json({
+    sendError(res, {
       message: 'You can only delete your own listings',
+      statusCode: 403,
     })
     return
   }
 
-  // prevent deleting an apartment with an accepted request
   const hasAcceptedRequest = await InterestRequest.exists({
     listing: apartment._id,
     status: 'accepted',
   })
 
   if (hasAcceptedRequest) {
-    res.status(400).json({
+    sendError(res, {
       message: 'Cannot delete a listing that has an accepted interest request',
+      statusCode: 400,
     })
     return
   }
 
   await apartment.deleteOne()
-  res.status(200).json({
-    message: `Apartment Deleted Successfully`,
+
+  sendSuccess(res, {
+    message: 'Apartment deleted successfully',
+    statusCode: 200,
   })
 })
 
@@ -133,45 +142,38 @@ const getListerRequests = asyncHandler(
       : req.params.id
 
     if (!listingId) {
-      res.status(400).json({
-        message: 'Listing id is required',
-      })
+      sendError(res, { message: 'Listing id is required', statusCode: 400 })
       return
     }
 
-    // 1. check apartment first
     const listing = await Listing.findById(listingId)
 
     if (!listing) {
-      res.status(404).json({
-        message: 'Apartment not found',
-      })
+      sendError(res, { message: 'Apartment not found', statusCode: 404 })
       return
     }
 
-    // 2. Make sure the logged-in lister owns this apartment
     if (!listing.owner.equals(req.user!._id)) {
-      res.status(403).json({
+      sendError(res, {
         message: 'You can only view requests for your own apartment',
+        statusCode: 403,
       })
       return
     }
 
-    const requests = await InterestRequest.find({
-      listing: listingId,
-    })
+    const requests = await InterestRequest.find({ listing: listingId })
       .populate('seeker', 'fullName email -_id')
       .select('listing seeker -_id')
       .select('-__v')
 
-    if (requests.length === 0) {
-      res.status(404).json({
-        message: 'No interest requests found',
-      })
-      return
-    }
-
-    res.status(200).json(requests)
+    sendSuccess(res, {
+      message:
+        requests.length === 0
+          ? 'No interest requests found'
+          : 'Interest requests fetched successfully',
+      data: { requests },
+      statusCode: 200,
+    })
   },
 )
 
