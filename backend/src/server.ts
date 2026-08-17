@@ -13,12 +13,10 @@ import { requestsRouter } from './routers/Requests.rotuer.js'
 import swaggerUi from 'swagger-ui-express'
 import { swaggerSpec } from './config/swagger.config.js'
 import { connectToDB } from './config/db.config.js'
+import { startServer } from './utils/server.utils.js'
 
 // APP
 const app: express.Application = express()
-
-// connect to database
-connectToDB()
 
 // Middlewares
 app.use(express.json())
@@ -26,9 +24,6 @@ app.use(requestsLogger)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 // Routes
-app.get('/', (req, res) => {
-  res.status(200).send('Backend API is up and running!')
-})
 app.use('/auth', authRouter)
 app.use('/listings', ApartmentRouter) // public GET + POST /:id/requests
 app.use('/listings', listingsRouter) // Lister CRUD (create/update/delete)
@@ -38,4 +33,4 @@ app.use('/requests', requestsRouter) // accept/declinerequests - Listers get/del
 app.use(notFound)
 app.use(errorHandler)
 
-export default app
+startServer(app)
