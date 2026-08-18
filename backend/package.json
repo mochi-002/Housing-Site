@@ -10,6 +10,7 @@
     "seed:listings": "tsx src/seeds/listings.seed.ts",
     "seed:listers": "tsx src/seeds/listers.seed.ts"
   },
+  
   "keywords": [],
   "type": "module",
   "devDependencies": {
