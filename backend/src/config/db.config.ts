@@ -4,16 +4,24 @@ import { logger } from '../middlewares/Logger.middleware.js'
 
 async function connectToDB() {
   logger.separator()
+
   try {
-    await mongoose.connect(process.env.MONGO_URI!)
-    logger.success('Connected to mongoDB')
-    if (process.env.MONGO_USERNAME)
-      logger.info(`On mongodb+srv://${process.env.MONGO_USERNAME}`)
-    else logger.info(`On mongodb://127.0.0.1:27017/Shaqty`)
+    const mongoUri = process.env.MONGO_URI
+
+    if (!mongoUri) {
+      throw new Error('MONGO_URI is not defined')
+    }
+
+    await mongoose.connect(mongoUri)
+
+    logger.success('Connected to MongoDB')
+    logger.info(`Database: ${mongoose.connection.name}`)
+    logger.info(`Host: ${mongoose.connection.host}`)
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)
-    logger.error(`Connecting to mongoDB failed`)
-    logger.error(`${message}`)
+
+    logger.error('Connecting to MongoDB failed')
+    logger.error(message)
   }
 }
 
