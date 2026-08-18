@@ -1,14 +1,15 @@
 import express from 'express'
 import mongoose from 'mongoose'
+import { sendError } from '../utils/response.util.js'
 
 export const notFound = (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction,
 ) => {
-  res.status(404).json({
-    success: false,
+  sendError(res, {
     message: `Route not found: ${req.originalUrl}`,
+    statusCode: 404,
   })
 }
 
@@ -18,16 +19,17 @@ export const errorHandler = (
   res: express.Response,
   next: express.NextFunction,
 ) => {
-  res.status(500).json({
-    success: false,
+  sendError(res, {
     message: 'Something went wrong, please try again later',
+    statusCode: 500,
   })
 }
 
 export const validateId = (id: string, res: express.Response): boolean => {
   if (!mongoose.isValidObjectId(id)) {
-    res.status(400).json({
-      message: 'Invalid post ID',
+    sendError(res, {
+      message: `Invalid ID`,
+      statusCode: 400,
     })
 
     return false

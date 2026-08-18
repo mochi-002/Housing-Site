@@ -75,9 +75,9 @@ Phase 9 - Testing & Polish:
   ☐ Clean up console logs, finalize .gitignore
 
 Bonus (Optional):
-  ☐ Pagination on GET /listings
-  ☐ Favorite/saved listings for seekers
-  ☐ Basic messaging between lister and seeker
-  ☐ Sorting by price / newest
-  ☐ Dashboard statistics (e.g. total listings, requests per status)
+  ✔ Pagination on GET /listings @done(26-08-18)
+  ✔ Favorite/saved listings for seekers @done(26-08-18)
+  ✔ Basic messaging between lister and seeker @done(26-08-18)
+  ✔ Sorting by price / newest @done(26-08-18)
+  ✔ Dashboard statistics (e.g. total listings, requests per status) @done(26-08-18)
   ✔ Logging middleware to file (if not already done in Phase 6) @done(26-08-17)

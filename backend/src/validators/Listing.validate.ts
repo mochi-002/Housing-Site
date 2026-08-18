@@ -33,6 +33,9 @@ function validateQuerySchema(obj: Object) {
     maxPrice: Joi.number().min(0),
     rooms: Joi.number().integer().min(1),
     status: Joi.string().valid('available', 'full'),
+    page: Joi.number().integer().min(1),
+    limit: Joi.number().integer().min(1).max(50),
+    sort: Joi.string().valid('price_asc', 'price_desc', 'newest', 'oldest'),
   })
 
   return schema.validate(obj)

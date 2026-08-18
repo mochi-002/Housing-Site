@@ -8,6 +8,7 @@ interface IUser {
   password: string
   role: 'Lister' | 'Seeker'
   isAdmin: boolean
+  favorites: mongoose.Types.ObjectId[]
 }
 
 interface IUserMethods {
@@ -45,6 +46,13 @@ const UserSchema = new mongoose.Schema<
     type: Boolean,
     default: false,
   },
+  favorites: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Listing',
+      default: [],
+    }
+  ]
 })
 
 UserSchema.methods.generateAuthToken = function (): string {

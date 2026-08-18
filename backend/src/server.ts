@@ -12,8 +12,10 @@ import { ApartmentRouter } from './routers/User.router.js'
 import { requestsRouter } from './routers/Requests.rotuer.js'
 import swaggerUi from 'swagger-ui-express'
 import { swaggerSpec } from './config/swagger.config.js'
-import { connectToDB } from './config/db.config.js'
 import { startServer } from './utils/server.utils.js'
+import { favoritesRouter } from './routers/Favorites.router.js'
+import { messagesRouter } from './routers/Messages.router.js'
+import { statsRouter } from './routers/Stats.router.js'
 
 // APP
 const app: express.Application = express()
@@ -28,6 +30,9 @@ app.use('/auth', authRouter)
 app.use('/listings', ApartmentRouter) // public GET + POST /:id/requests
 app.use('/listings', listingsRouter) // Lister CRUD (create/update/delete)
 app.use('/requests', requestsRouter) // accept/declinerequests - Listers get/delteRequests - Users
+app.use('/favorites', favoritesRouter) // Seekers save/unsave/view favorited listings
+app.use('/messages', messagesRouter) // basic lister <-> seeker messaging
+app.use('/stats', statsRouter) // dashboard stats (role-aware + admin overview)
 
 // Errors
 app.use(notFound)

@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import type { Request, Response, NextFunction } from 'express'
 import 'dotenv/config'
+import { sendError } from '../utils/response.util.js'
 
 export interface AuthPayload {
   _id: string
@@ -22,8 +23,9 @@ function verifyToken(req: AuthRequest, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    res.status(401).json({
+    sendError(res, {
       message: 'No token provided',
+      statusCode: 401,
     })
     return
   }
@@ -31,7 +33,8 @@ function verifyToken(req: AuthRequest, res: Response, next: NextFunction) {
   const token = authHeader.split(' ')[1]
 
   if (!token) {
-    res.status(401).json({
+    sendError(res, {
+      statusCode: 401,
       message: 'Invalid token format',
     })
     return
@@ -40,8 +43,9 @@ function verifyToken(req: AuthRequest, res: Response, next: NextFunction) {
   const jwtSecret = process.env.JWT_SECRET
 
   if (!jwtSecret) {
-    res.status(500).json({
+    sendError(res, {
       message: 'JWT secret is not configured',
+      statusCode: 500,
     })
     return
   }
@@ -51,10 +55,27 @@ function verifyToken(req: AuthRequest, res: Response, next: NextFunction) {
     req.user = decoded
     next()
   } catch (err) {
-    res.status(401).json({
+    sendError(res, {
       message: 'Invalid or expired token',
+      statusCode: 401,
+    })
+  }
+}
+
+/**
+ * @description Verifies the user is an Admin
+ */
+function verifyAdmin(req: AuthRequest, res: Response, next: NextFunction) {
+  const isAdmin = req.user?.isAdmin
+  if (isAdmin) {
+    next()
+  } else {
+    sendError(res, {
+      message: `Admin access required`,
+      statusCode: 403,
     })
   }
 }
 
 export default verifyToken
+export { verifyAdmin }

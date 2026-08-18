@@ -6,8 +6,16 @@ import type { AuthRequest } from '../middlewares/Auth.middleware.js'
 import { InterestRequest } from '../models/InterestRequest.model.js'
 import { sendError, sendSuccess } from '../utils/response.util.js'
 
+const SORT_OPTIONS: Record<string, Record<string, 1 | -1> | null> = {
+  none: null,
+  price_asc: { price: 1 },
+  price_desc: { price: -1 },
+  newest: { createdAt: -1 },
+  oldest: { createdAt: 1 },
+}
+
 /**
- * @description Get all Apartments (with optional search/filter)
+ * @description Get all Apartments  (with optional search/filter, sorting, and pagination)
  * @route /listings
  * @method GET
  * @access public
@@ -38,12 +46,26 @@ const getAll = asyncHandler(async (req: Request, res: Response) => {
     if (maxPrice) filter.price.$lte = Number(maxPrice)
   }
 
-  // 4. Query database
-  const apartments = await Listing.find(filter).populate(
-    'owner',
-    'fullName email -_id',
+  // 4. Pagination
+  const page = parseInt(req.query.page as string, 10) || 1
+  const limit = Math.min(
+    50,
+    Math.max(1, parseInt(req.query.limit as string, 10)),
   )
+  const skip = (page - 1) * limit
 
+  // 5. Sorting
+  const sortKey = typeof req.query.sort === 'string' ? req.query.sort : 'none'
+  const sortOption = SORT_OPTIONS[sortKey] ?? SORT_OPTIONS.none!
+
+  // 6. Query database
+  const apartments = await Listing.find(filter)
+    .populate('owner', 'fullName email -_id')
+    .sort(sortOption)
+    .skip(skip)
+    .limit(limit)
+
+  // 7. response
   sendSuccess(res, {
     message:
       apartments.length === 0

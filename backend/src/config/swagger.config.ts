@@ -50,6 +50,10 @@ const options: swaggerJsdoc.Options = {
               enum: ['seeker', 'lister'],
               example: 'seeker',
             },
+            favorites: {
+              type: 'object',
+              example: ['64f123456789abcdef123456', '64f123456789abcdef123456'],
+            },
           },
         },
 
@@ -107,6 +111,37 @@ const options: swaggerJsdoc.Options = {
               type: 'string',
               enum: ['pending', 'accepted', 'declined'],
               example: 'pending',
+            },
+          },
+        },
+
+        Message: {
+          type: 'object',
+          properties: {
+            _id: {
+              type: 'string',
+              example: '64f123456789abcdef123456',
+            },
+            sender: {
+              type: 'string',
+              example: '64f123456789abcdef123456',
+            },
+            recipient: {
+              type: 'string',
+              example: '64f123456789abcdef123456',
+            },
+            listing: {
+              type: 'string',
+              example: '64f123456789abcdef123456',
+            },
+            content: {
+              type: 'string',
+              example:
+                'Hello, i need to know some informations about this apartment!',
+            },
+            read: {
+              type: 'booolean',
+              example: 'true',
             },
           },
         },
