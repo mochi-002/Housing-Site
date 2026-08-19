@@ -1,11 +1,10 @@
 .prettierrc
 requirements.md
+req.md
 
-backend/node_modules
-backend/.env
-backend/package-lock.json
-backend/req.md
-backend/TODO
-backend/dist
-
-frontend/
+node_modules/
+.env
+package-lock.json
+req.md
+TODO
+dist/
