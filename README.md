@@ -220,7 +220,7 @@ kept consistent across pages.
 
 ### Message
 
-<div align="center">
+<div width="100%" align="center">
   <table width="100%">
     <thead>
       <tr>
