@@ -84,170 +84,47 @@ GET    /stats/overview               # role-aware stats, admin overview
 Sorting is opt-in — omitting `sort` returns results in insertion order,
 kept consistent across pages.
 
-## Roles
-
-<div align="center">
-  <table width="100%">
-    <thead>
-      <tr>
-        <th align="center">Role</th>
-        <th align="center">Can do</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td align="center"><strong>Lister</strong></td>
-        <td align="center">Create/update/delete listings, view interest requests, message Seekers</td>
-      </tr>
-      <tr>
-        <td align="center"><strong>Seeker</strong></td>
-        <td align="center">Browse/search listings, send interest requests, favorite listings, message Listers</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-## Data model
+## Data models
 
 ### User
 
-<div align="center">
-  <table width="100%">
-    <thead>
-      <tr>
-        <th align="center">Field</th>
-        <th align="center">Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td align="center"><code>name</code></td>
-        <td align="center">Full name</td>
-      </tr>
-      <tr>
-        <td align="center"><code>email</code></td>
-        <td align="center">Unique, used for login</td>
-      </tr>
-      <tr>
-        <td align="center"><code>password</code></td>
-        <td align="center">Hashed with bcrypt</td>
-      </tr>
-      <tr>
-        <td align="center"><code>role</code></td>
-        <td align="center"><code>lister</code> or <code>seeker</code></td>
-      </tr>
-      <tr>
-        <td align="center"><code>createdAt</code></td>
-        <td align="center">ISO-8601 timestamp</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+| Field       | Description            |
+| ----------- | ---------------------- |
+| `name`      | Full name              |
+| `email`     | Unique, used for login |
+| `password`  | Hashed with bcrypt     |
+| `role`      | `lister` or `seeker`   |
+| `createdAt` | ISO-8601 timestamp     |
 
 ### Listing
 
-<div align="center">
-  <table width="100%">
-    <thead>
-      <tr>
-        <th align="center">Field</th>
-        <th align="center">Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td align="center"><code>title</code></td>
-        <td align="center">Listing title</td>
-      </tr>
-      <tr>
-        <td align="center"><code>description</code></td>
-        <td align="center">Full description</td>
-      </tr>
-      <tr>
-        <td align="center"><code>price</code></td>
-        <td align="center">Monthly rent</td>
-      </tr>
-      <tr>
-        <td align="center"><code>city</code></td>
-        <td align="center">Location</td>
-      </tr>
-      <tr>
-        <td align="center"><code>owner</code></td>
-        <td align="center">Reference to the Lister's User <code>_id</code></td>
-      </tr>
-      <tr>
-        <td align="center"><code>createdAt</code></td>
-        <td align="center">ISO-8601 timestamp</td>
-      </tr>
-      <tr>
-        <td align="center"><code>updatedAt</code></td>
-        <td align="center">ISO-8601 timestamp</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+| Field         | Description                          |
+| ------------- | ------------------------------------ |
+| `title`       | Listing title                        |
+| `description` | Full description                     |
+| `price`       | Monthly rent                         |
+| `city`        | Location                             |
+| `owner`       | Reference to the Lister's User `_id` |
+| `createdAt`   | ISO-8601 timestamp                   |
+| `updatedAt`   | ISO-8601 timestamp                   |
 
 ### InterestRequest
 
-<div align="center">
-  <table width="100%">
-    <thead>
-      <tr>
-        <th align="center">Field</th>
-        <th align="center">Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td align="center"><code>listing</code></td>
-        <td align="center">Reference to Listing <code>_id</code></td>
-      </tr>
-      <tr>
-        <td align="center"><code>seeker</code></td>
-        <td align="center">Reference to the requesting User <code>_id</code></td>
-      </tr>
-      <tr>
-        <td align="center"><code>status</code></td>
-        <td align="center"><code>pending</code>, <code>accepted</code>, or <code>rejected</code></td>
-      </tr>
-      <tr>
-        <td align="center"><code>createdAt</code></td>
-        <td align="center">ISO-8601 timestamp</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+| Field       | Description                            |
+| ----------- | -------------------------------------- |
+| `listing`   | Reference to Listing `_id`             |
+| `seeker`    | Reference to the requesting User `_id` |
+| `status`    | `pending`, `accepted`, or `rejected`   |
+| `createdAt` | ISO-8601 timestamp                     |
 
 ### Message
 
-<div width="100%" align="center">
-  <table width="100%">
-    <thead>
-      <tr>
-        <th align="center">Field</th>
-        <th align="center">Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td align="center"><code>sender</code></td>
-        <td align="center">Reference to sender's User <code>_id</code></td>
-      </tr>
-      <tr>
-        <td align="center"><code>recipient</code></td>
-        <td align="center">Reference to recipient's User <code>_id</code></td>
-      </tr>
-      <tr>
-        <td align="center"><code>content</code></td>
-        <td align="center">Message text</td>
-      </tr>
-      <tr>
-        <td align="center"><code>createdAt</code></td>
-        <td align="center">ISO-8601 timestamp</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+| Field       | Description                         |
+| ----------- | ----------------------------------- |
+| `sender`    | Reference to sender's User `_id`    |
+| `recipient` | Reference to recipient's User `_id` |
+| `content`   | Message text                        |
+| `createdAt` | ISO-8601 timestamp                  |
 
 ## Project structure
 
