@@ -1,9 +1,9 @@
 import asyncHandler from 'express-async-handler'
 import { Listing } from '../models/Listing.model.js'
-import { validateListingQuery } from '../validators/Listing.validate.js'
-import type { Request, Response } from 'express'
+import type { Response } from 'express'
 import type { AuthRequest } from '../middlewares/Auth.middleware.js'
 import { InterestRequest } from '../models/InterestRequest.model.js'
+import { sendError, sendSuccess } from '../utils/response.util.js'
 
 /**
  * @description Request an Apartment
@@ -16,24 +16,27 @@ const requestApartment = asyncHandler(
     // 1. check apartment
     const apartment = await Listing.findById(req.params.id)
     if (!apartment) {
-      res.status(404).json({
+      sendError(res, {
         message: `Apartment not found`,
+        statusCode: 404,
       })
       return
     }
 
     // 2. check that the requester isn't the owner
     if (apartment.owner.equals(req.user!._id)) {
-      res.status(403).json({
+      sendError(res, {
         message: "You cann't requset your own apartment",
+        statusCode: 403,
       })
       return
     }
 
     // 3. check availablity
     if (apartment.status !== 'available') {
-      res.status(403).json({
+      sendError(res, {
         message: `Apartment isn't available for registeration`,
+        statusCode: 403,
       })
       return
     }
@@ -46,11 +49,12 @@ const requestApartment = asyncHandler(
     })
 
     if (existingRequest) {
-      res.status(409).json({
+      sendError(res, {
         message:
           existingRequest.status === 'accepted'
             ? 'You already have an accepted request for this apartment'
             : 'You already have a pending request for this apartment',
+        statusCode: 409,
       })
       return
     }
@@ -61,9 +65,10 @@ const requestApartment = asyncHandler(
       seeker: req.user!._id,
     })
 
-    res.status(201).json({
+    sendSuccess(res, {
       message: 'Request sent successfully',
-      request: interestRequest,
+      data: { request: interestRequest },
+      statusCode: 201,
     })
   },
 )
@@ -78,30 +83,35 @@ const deleteRequest = asyncHandler(async (req: AuthRequest, res: Response) => {
   const request = await InterestRequest.findById(req.params.id)
 
   if (!request) {
-    res.status(404).json({
+    sendError(res, {
       message: 'Request not found',
+      statusCode: 404,
     })
     return
   }
 
   if (!request.seeker.equals(req.user!._id)) {
-    res.status(403).json({
+    sendError(res, {
       message: 'You can only delete your own requests',
+      statusCode: 403,
     })
     return
   }
 
   if (request.status !== 'pending') {
-    res.status(400).json({
+    sendError(res, {
       message: 'Only pending requests can be cancelled',
+      statusCode: 400,
     })
     return
   }
 
   await request.deleteOne()
 
-  res.status(200).json({
+  sendSuccess(res, {
     message: `Request ${request._id} cancelled successfully`,
+    data: { request },
+    statusCode: 200,
   })
 })
 
@@ -115,30 +125,34 @@ const deleteRequest = asyncHandler(async (req: AuthRequest, res: Response) => {
 const accept = asyncHandler(async (req: AuthRequest, res: Response) => {
   const request = await InterestRequest.findById(req.params.id)
   if (!request) {
-    res.status(404).json({
+    sendError(res, {
       message: `Request not found`,
+      statusCode: 404,
     })
     return
   }
 
   const listing = await Listing.findById(request.listing)
   if (!listing) {
-    res.status(404).json({
+    sendError(res, {
       message: `Apartment not found`,
+      statusCode: 404,
     })
     return
   }
 
   if (!listing.owner.equals(req.user!._id)) {
-    res.status(403).json({
+    sendError(res, {
       message: `Only the apartment owner can accept requests`,
+      statusCode: 403,
     })
     return
   }
 
   if (request.status !== 'pending') {
-    res.status(400).json({
+    sendError(res, {
       message: 'Only pending requests can be accepted',
+      statusCode: 400,
     })
     return
   }
@@ -146,9 +160,10 @@ const accept = asyncHandler(async (req: AuthRequest, res: Response) => {
   request.status = 'accepted'
   await request.save()
 
-  res.status(200).json({
+  sendSuccess(res, {
     message: 'Interest request accepted',
-    request,
+    data: { request },
+    statusCode: 200,
   })
 })
 
@@ -163,8 +178,9 @@ const decline = asyncHandler(async (req: AuthRequest, res: Response) => {
   const request = await InterestRequest.findById(req.params.id)
 
   if (!request) {
-    res.status(404).json({
+    sendError(res, {
       message: 'Interest request not found',
+      statusCode: 404,
     })
     return
   }
@@ -172,23 +188,26 @@ const decline = asyncHandler(async (req: AuthRequest, res: Response) => {
   const listing = await Listing.findById(request.listing)
 
   if (!listing) {
-    res.status(404).json({
+    sendError(res, {
       message: 'Apartment not found',
+      statusCode: 404,
     })
     return
   }
 
   // Only the apartment owner can decline the request
   if (!listing.owner.equals(req.user!._id)) {
-    res.status(403).json({
+    sendError(res, {
       message: 'Only the apartment owner can decline requests',
+      statusCode: 403,
     })
     return
   }
 
   if (request.status !== 'pending') {
-    res.status(400).json({
+    sendError(res, {
       message: 'Only pending requests can be declined',
+      statusCode: 400,
     })
     return
   }
@@ -196,9 +215,10 @@ const decline = asyncHandler(async (req: AuthRequest, res: Response) => {
   request.status = 'declined'
   await request.save()
 
-  res.status(200).json({
+  sendSuccess(res, {
     message: 'Interest request declined',
-    request,
+    data: { request },
+    statusCode: 200,
   })
 })
 
