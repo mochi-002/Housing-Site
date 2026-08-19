@@ -4,10 +4,21 @@ A RESTful backend for a student housing finder. Supports two user
 roles — **Lister** and **Seeker** — with listings, interest requests,
 messaging, favorites, and role-aware dashboard stats.
 
-## Live
+---
 
-- **Base URL:** https://shaqty-production.up.railway.app
-- **API docs (Swagger):** https://shaqty-production.up.railway.app/api-docs
+<p align="center">
+<a href="https://shaqty-production.up.railway.app">
+    <strong>🕸️ Open Live App</strong>
+  </a>
+</p>
+  
+<p align="center">
+  <a href="https://shaqty-production.up.railway.app/api-docs">
+    <strong>📚 Open Swagger API Documentation</strong>
+  </a>
+</p>
+
+---
 
 ## Requirements
 

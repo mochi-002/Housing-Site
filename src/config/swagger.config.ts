@@ -14,6 +14,10 @@ const options: swaggerJsdoc.Options = {
 
     servers: [
       {
+        url: 'https://shaqty-production.up.railway.app/',
+        description: 'Railway Server',
+      },
+      {
         url: 'http://localhost:3000',
         description: 'Local development server',
       },
