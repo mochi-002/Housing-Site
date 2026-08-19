@@ -18,18 +18,23 @@ import { messagesRouter } from './routers/Messages.router.js'
 import { statsRouter } from './routers/Stats.router.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // APP
 const app: express.Application = express()
 
-// Middlewares
+// Middlerwares
 app.use(express.json())
 app.use(requestsLogger)
+
+console.log('__dirname:', __dirname)
+console.log('view path:', path.join(__dirname, '../views/index.html'))
 app.get('/', (_req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'index.html'))
+  res.sendFile(path.join(__dirname, '../views/index.html'))
 })
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 // Routes
