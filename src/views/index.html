@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shaqty API</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap');
+
+      :root {
+        --blueprint: #0b1e3d;
+        --blueprint-line: #2f5d8a;
+        --blueprint-line-soft: rgba(96, 165, 250, 0.16);
+        --paper: #eaf1fb;
+        --paper-dim: #9db3ce;
+        --brass: #e0b04f;
+        --live: #6fd39a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Inter', Arial, sans-serif;
+        background:
+          linear-gradient(var(--blueprint-line-soft) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            var(--blueprint-line-soft) 1px,
+            transparent 1px
+          ),
+          var(--blueprint);
+        background-size:
+          28px 28px,
+          28px 28px,
+          cover;
+        color: var(--paper);
+        text-align: center;
+        padding: 24px;
+      }
+
+      .sheet {
+        position: relative;
+        max-width: 640px;
+        width: 100%;
+        padding: 56px 48px;
+        border: 1.5px dashed var(--blueprint-line);
+      }
+
+      /* corner registration marks, like a drafted plan */
+      .sheet::before,
+      .sheet::after,
+      .corner-tl,
+      .corner-br {
+        content: '';
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        border: 1.5px solid var(--brass);
+      }
+      .sheet::before {
+        top: -1.5px;
+        left: -1.5px;
+        border-right: none;
+        border-bottom: none;
+      }
+      .sheet::after {
+        bottom: -1.5px;
+        right: -1.5px;
+        border-left: none;
+        border-top: none;
+      }
+      .corner-tl {
+        top: -1.5px;
+        right: -1.5px;
+        border-left: none;
+        border-bottom: none;
+      }
+      .corner-br {
+        bottom: -1.5px;
+        left: -1.5px;
+        border-right: none;
+        border-top: none;
+      }
+
+      .label {
+        font-family: 'Space Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--paper-dim);
+        margin-bottom: 18px;
+      }
+
+      h1 {
+        font-family: 'Space Mono', monospace;
+        font-size: 3rem;
+        font-weight: 700;
+        margin: 0 0 6px;
+        letter-spacing: 0.02em;
+      }
+      h1 span {
+        color: var(--brass);
+      }
+
+      p.tagline {
+        color: var(--paper-dim);
+        font-size: 1.05rem;
+        margin: 0 0 34px;
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 34px;
+        padding: 10px 18px;
+        border: 1px solid var(--blueprint-line);
+        background: rgba(96, 165, 250, 0.06);
+        font-family: 'Space Mono', monospace;
+        font-size: 0.85rem;
+        letter-spacing: 0.05em;
+      }
+      .status .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--live);
+        box-shadow: 0 0 0 3px rgba(111, 211, 154, 0.2);
+      }
+
+      a.cta {
+        display: inline-block;
+        padding: 13px 26px;
+        border: 1.5px solid var(--brass);
+        color: var(--brass);
+        font-family: 'Space Mono', monospace;
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition:
+          background 0.15s ease,
+          color 0.15s ease;
+      }
+      a.cta:hover {
+        background: var(--brass);
+        color: var(--blueprint);
+      }
+
+      .dims {
+        margin-top: 40px;
+        font-family: 'Space Mono', monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.15em;
+        color: var(--blueprint-line);
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+      <span class="corner-tl"></span>
+      <span class="corner-br"></span>
+
+      <div class="label">Fig. 01 — Listing Access Layer</div>
+
+      <h1>Shaqty<span>.</span></h1>
+      <p class="tagline">Student Housing Finder API</p>
+
+      <div class="status">
+        <span class="dot"></span>
+        API is running
+      </div>
+
+      <div>
+        <a class="cta" href="/api-docs">Open API Documentation</a>
+      </div>
+
+      <div class="dims">Scale — 1:1 · Rev. 2026</div>
+    </main>
+  </body>
+</html>

@@ -16,6 +16,10 @@ import { startServer } from './utils/server.utils.js'
 import { favoritesRouter } from './routers/Favorites.router.js'
 import { messagesRouter } from './routers/Messages.router.js'
 import { statsRouter } from './routers/Stats.router.js'
+import path from 'path'
+import { fileURLToPath } from 'url'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // APP
 const app: express.Application = express()
@@ -23,6 +27,9 @@ const app: express.Application = express()
 // Middlewares
 app.use(express.json())
 app.use(requestsLogger)
+app.get('/', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'index.html'))
+})
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 // Routes

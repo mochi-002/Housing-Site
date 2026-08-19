@@ -35,6 +35,7 @@ npm start       # run compiled build
 ```
 
 API docs are served at `/api-docs` via Swagger once the server is running.
+You can visit it now with [swagger-api-docs](https://shaqty-production.up.railway.app/api-docs/)
 
 ## Roles
 
