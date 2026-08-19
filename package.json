@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec tsx src/server.ts",
-    "build": "tsc",
+    "build": "tsc && cp -r src/views dist/views",
     "start": "node dist/server.js",
     "seed:listings": "tsx src/seeds/listings.seed.ts",
     "seed:listers": "tsx src/seeds/listers.seed.ts"
